@@ -1,7 +1,9 @@
 package main
 
 import (
-	"crypto/sha256"
+	"crypto/sha512"
+	"os"
+	"reflect"
 )
 
 var ru [256]byte
@@ -12,18 +14,7 @@ func init() {
 	}
 }
 
-func PopCount(x uint64) int {
-	return int(ru[byte(x>>(0*8))] +
-		ru[byte(x>>(1*8))] +
-		ru[byte(x>>(2*8))] +
-		ru[byte(x>>(3*8))] +
-		ru[byte(x>>(4*8))] +
-		ru[byte(x>>(5*8))] +
-		ru[byte(x>>(6*8))] +
-		ru[byte(x>>(7*8))])
-}
-
-func BitCount1(x, y []byte) int {
+func BitCount(x, y []byte) int {
 	var sum byte
 	for i := 0; i < len(x); i++ {
 		sum += ru[byte(x[i]^y[i])]
@@ -31,8 +22,17 @@ func BitCount1(x, y []byte) int {
 	return int(sum)
 }
 func main() {
-	c1 := sha256.Sum256([]byte("A"))
-	c2 := sha256.Sum256([]byte("B"))
-	count := BitCount1(c1[:], c2[:])
+	s := os.Args[1]
+	println("using ", s)
+	var x []byte
+	var y []byte
+	var me
+	switch s {
+	case "SHA384":
+		me := reflect.ValueOf(sha512.Sum384)
+	case "SHA512":
+		me := reflect.ValueOf(sha512.Sum512)
+	}
+	count := BitCount(x[:], y[:])
 	println(count)
 }
