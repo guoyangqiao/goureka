@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/sha256"
 	"crypto/sha512"
 	"os"
 	"reflect"
@@ -22,16 +23,18 @@ func BitCount(x, y []byte) int {
 	return int(sum)
 }
 func main() {
-	s := os.Args[1]
-	println("using ", s)
-	var x []byte
-	var y []byte
+	method := os.Args[1]
+	println("using ", method)
+	x := []byte("A")
+	y := []byte("A")
 	var me
-	switch s {
+	switch method {
 	case "SHA384":
 		me := reflect.ValueOf(sha512.Sum384)
 	case "SHA512":
 		me := reflect.ValueOf(sha512.Sum512)
+	default:
+		me := reflect.ValueOf(sha256.Sum256)
 	}
 	count := BitCount(x[:], y[:])
 	println(count)
