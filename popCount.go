@@ -5,6 +5,7 @@ import (
 	"crypto/sha512"
 	"os"
 	"reflect"
+	"strings"
 )
 
 var ru [256]byte
@@ -28,7 +29,7 @@ func main() {
 	x := []byte("A")
 	y := []byte("A")
 	var me
-	switch method {
+	switch strings.ToUpper(method) {
 	case "SHA384":
 		me := reflect.ValueOf(sha512.Sum384)
 	case "SHA512":
