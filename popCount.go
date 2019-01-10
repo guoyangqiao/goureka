@@ -24,19 +24,27 @@ func BitCount(x, y []byte) int {
 	return int(sum)
 }
 func main() {
-	method := os.Args[1]
-	println("using ", method)
-	x := []byte("A")
-	y := []byte("A")
-	var me
-	switch strings.ToUpper(method) {
-	case "SHA384":
-		me := reflect.ValueOf(sha512.Sum384)
-	case "SHA512":
-		me := reflect.ValueOf(sha512.Sum512)
-	default:
-		me := reflect.ValueOf(sha256.Sum256)
+	var meHint string
+	Args := os.Args
+	if len(Args) > 2 {
+		meHint = Args[1]
 	}
-	count := BitCount(x[:], y[:])
+	println("using ", meHint)
+	var me reflect.Value
+	switch strings.ToUpper(meHint) {
+	case "SHA384":
+		me = reflect.ValueOf(sha512.Sum384)
+	case "SHA512":
+		me = reflect.ValueOf(sha512.Sum512)
+	default:
+		me = reflect.ValueOf(sha256.Sum256)
+	}
+	i := callMe(me, []byte("A"))
+	j := callMe(me, []byte("X"))
+	count := BitCount(i[:], j[:])
 	println(count)
+}
+
+func callMe(me reflect.Value, x []byte) [32]uint8 {
+	return me.Call([]reflect.Value{reflect.ValueOf(x)})[0].Interface().([32]uint8)
 }
