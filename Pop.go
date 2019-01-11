@@ -1,29 +1,24 @@
 package main
 
-var bc = [256]byte{}
+var pc [256]byte
 
 func init() {
-	for x := range bc {
-		bc[x] = bc[x>>1] + byte(x&0x01)
+	for e := range pc {
+		pc[e] = pc[e>>1] + byte(e)&0X01
 	}
-}
-
-func popCnt(x uint32) int {
-	cc := int(
-		bc[byte(x>>(0*8))] +
-			bc[byte(x>>(1*8))] +
-			bc[byte(x>>(2*8))] +
-			bc[byte(x>>(3*8))])
-	return cc
-}
-
-func diffBit(x, y uint32) int {
-	return popCnt(x ^ y)
+	println()
 }
 
 func main() {
-	cnt := popCnt(255)
-	println(cnt)
-	bit := diffBit(165, 187)
-	println(bit)
+	s := "E"
+	c := countBit1(s)
+	println(c)
+}
+func countBit1(s string) int {
+	c := []byte(s)
+	var sum int
+	for _, v := range c {
+		sum += int(pc[v])
+	}
+	return sum
 }
