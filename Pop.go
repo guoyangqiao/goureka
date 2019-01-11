@@ -6,7 +6,6 @@ func init() {
 	for e := range pc {
 		pc[e] = pc[e>>1] + byte(e)&0X01
 	}
-	println()
 }
 
 func main() {
